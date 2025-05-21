@@ -6,18 +6,19 @@ const uploadRoutes = require("./routes/upload");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 
-const corsOptions = {
-  origin: "https://imagesaver.netlify.app", // Your frontend domain
-  credentials: true,
-};
-app.use(cors(corsOptions));
-
+app.use(
+  cors({
+    origin: "https://imagesaver.netlify.app", // Allow your frontend origin
+    credentials: true, // If you're using cookies/auth headers
+  })
+);
+app.options("*", cors());
 mongoose.connect(process.env.MONGO_URI, {}).then(() => {
   try {
     console.log("MongoDB connected");
