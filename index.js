@@ -12,6 +12,12 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 
+const corsOptions = {
+  origin: "https://imagesaver.netlify.app", // Your frontend domain
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 mongoose.connect(process.env.MONGO_URI, {}).then(() => {
   try {
     console.log("MongoDB connected");
