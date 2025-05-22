@@ -7,27 +7,19 @@ require("dotenv").config();
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 
-app.use(
-  cors({
-    origin: "https://imagesaver.netlify.app", // Allow your frontend origin
-    credentials: true, // If you're using cookies/auth headers
-  })
-);
-app.options("*", cors());
-mongoose.connect(process.env.MONGO_URI, {}).then(() => {
-  try {
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-  }
-});
+mongoose
+  .connect(process.env.MONGO_URI, {})
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
